@@ -12,15 +12,9 @@
       --text-dark: #111827;
       --border-color: #e5e7eb;
       --danger-color: #ef4444;
-      --success-color: #10b981;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
     body {
       background-color: #f3f4f6;
@@ -29,7 +23,6 @@
       min-height: 100vh;
     }
 
-    /* Sidebar Navigation */
     .sidebar {
       width: 250px;
       background-color: var(--bg-dark);
@@ -46,34 +39,6 @@
       text-align: center;
     }
 
-    .nav-links {
-      list-style: none;
-    }
-
-    .nav-links li {
-      margin-bottom: 10px;
-    }
-
-    .nav-links button {
-      width: 100%;
-      background: none;
-      border: none;
-      color: #9ca3af;
-      text-align: left;
-      font-weight: 600;
-      padding: 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: 0.3s;
-    }
-
-    .nav-links button:hover, .nav-links button.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    /* Main Content Area */
     .main-content {
       flex: 1;
       padding: 30px;
@@ -87,64 +52,45 @@
       margin-bottom: 25px;
     }
 
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .card .number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
     .card-box {
       background-color: var(--bg-card);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-
-    .card-box h2 {
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      margin-bottom: 5px;
-      color: #4b5563;
-      font-weight: 600;
-    }
-
-    .form-group input, .form-group select {
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      outline: none;
-    }
-
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.9;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
+      margin-top: 15px;
     }
 
     th, td {
@@ -160,62 +106,65 @@
     }
 
     .status {
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 0.85rem;
       font-weight: bold;
+      border: 1px solid var(--border-color);
     }
 
-    .status.pendiente { background-color: #fef3c7; color: #d97706; }
-    .status.preparando { background-color: #e0f2fe; color: #0284c7; }
-    .status.listo { background-color: #d1fae5; color: #059669; }
-    .status.entregado { background-color: #f3f4f6; color: #374151; }
+    .btn-delete {
+      background-color: #fee2e2;
+      color: var(--danger-color);
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-    .btn-delete { background-color: #fee2e2; color: var(--danger-color); border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .btn-clear {
+      background-color: #e5e7eb;
+      color: #374151;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      float: right;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <h2>La Distingancia ☕</h2>
-    <ul class="nav-links">
-      <li><button class="active">📦 Pedidos de WhatsApp</button></li>
-    </ul>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
     <div class="header">
-      <h1>Panel de Pedidos (Vía WhatsApp)</h1>
+      <h1>Control de Ventas y Pedidos</h1>
       <span id="current-date"></span>
     </div>
 
-    <!-- Formulario rápido para registrar lo que llega a WhatsApp -->
-    <section class="card-box">
-      <h2>📲 Registrar Pedido Recibido en WhatsApp</h2>
-      <form id="whatsapp-order-form" onsubmit="registrarPedidoWhatsApp(event)">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nombre del Cliente</label>
-            <input type="text" id="wa-cliente" placeholder="Ej. Juan Pérez" required>
-          </div>
-          <div class="form-group">
-            <label>Detalle del Pedido</label>
-            <input type="text" id="wa-detalle" placeholder="Ej. 2x Empanadas, 1x Jugo" required>
-          </div>
-          <div class="form-group">
-            <label>Total (RD$)</label>
-            <input type="number" id="wa-total" placeholder="180" required>
-          </div>
-        </div>
-        <button type="submit" class="btn-primary">+ Añadir a Pedidos Activos</button>
-      </form>
+    <!-- Indicadores -->
+    <section class="dashboard-cards">
+      <div class="card">
+        <h3>Pedidos de Hoy</h3>
+        <div class="number" id="count-pedidos">0</div>
+      </div>
+      <div class="card">
+        <h3>Total en Ventas</h3>
+        <div class="number" id="sum-ventas">RD$ 0</div>
+      </div>
     </section>
 
     <!-- Tabla de Pedidos -->
     <section class="card-box">
-      <h2>Listado de Pedidos en Curso</h2>
+      <div>
+        <button class="btn-clear" onclick="limpiarTodo()">Borrar Historial</button>
+        <h2>Pedidos Recibidos (Vía WhatsApp / Cliente)</h2>
+      </div>
       <table>
         <thead>
           <tr>
@@ -228,63 +177,35 @@
           </tr>
         </thead>
         <tbody id="orders-table-body">
-          <!-- Cargado por JavaScript -->
+          <!-- Se actualiza solo -->
         </tbody>
       </table>
     </section>
   </main>
 
   <script>
-    // Fecha Actual
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-DO', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Cargar pedidos guardados o iniciar con lista vacía
-    let pedidos = JSON.parse(localStorage.getItem('pedidos_distingancia')) || [];
-
-    function guardarYRenderizar() {
-      localStorage.setItem('pedidos_distingancia', JSON.stringify(pedidos));
-      renderPedidos();
-    }
-
-    function registrarPedidoWhatsApp(e) {
-      e.preventDefault();
-      const cliente = document.getElementById('wa-cliente').value;
-      const detalle = document.getElementById('wa-detalle').value;
-      const total = 'RD$ ' + document.getElementById('wa-total').value;
-      const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      const nuevoPedido = {
-        id: Date.now(),
-        hora,
-        cliente,
-        detalle,
-        total,
-        estado: 'pendiente'
-      };
-
-      pedidos.unshift(nuevoPedido); // Agregar al inicio
-      guardarYRenderizar();
-      document.getElementById('whatsapp-order-form').reset();
-    }
-
-    function cambiarEstadoPedido(id, nuevoEstado) {
-      pedidos = pedidos.map(p => p.id === id ? { ...p, estado: nuevoEstado } : p);
-      guardarYRenderizar();
-    }
-
-    function eliminarPedido(id) {
-      pedidos = pedidos.filter(p => p.id !== id);
-      guardarYRenderizar();
-    }
+    let pedidosGuardadosAnterior = "";
 
     function renderPedidos() {
+      const pedidos = JSON.parse(localStorage.getItem('pedidos_distingancia')) || [];
       const tbody = document.getElementById('orders-table-body');
+      
+      // Actualizar métricas
+      document.getElementById('count-pedidos').innerText = pedidos.length;
+      const totalSuma = pedidos.reduce((acc, p) => {
+        const monto = parseFloat(p.total.replace('RD$', '').trim()) || 0;
+        return acc + monto;
+      }, 0);
+      document.getElementById('sum-ventas').innerText = `RD$ ${totalSuma}`;
+
       tbody.innerHTML = '';
 
       if (pedidos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #6b7280;">No hay pedidos activos registrados hoy.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #6b7280;">No hay pedidos registrados.</td></tr>`;
         return;
       }
 
@@ -294,13 +215,13 @@
             <td><small>${p.hora}</small></td>
             <td><strong>${p.cliente}</strong></td>
             <td>${p.detalle}</td>
-            <td>${p.total}</td>
+            <td><strong>${p.total}</strong></td>
             <td>
-              <select class="status ${p.estado}" onchange="cambiarEstadoPedido(${p.id}, this.value)">
-                <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                <option value="preparando" ${p.estado === 'preparando' ? 'selected' : ''}>Preparando</option>
-                <option value="listo" ${p.estado === 'listo' ? 'selected' : ''}>Listo</option>
-                <option value="entregado" ${p.estado === 'entregado' ? 'selected' : ''}>Entregado</option>
+              <select class="status" onchange="cambiarEstadoPedido(${p.id}, this.value)">
+                <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                <option value="preparando" ${p.estado === 'preparando' ? 'selected' : ''}>👨‍🍳 Preparando</option>
+                <option value="listo" ${p.estado === 'listo' ? 'selected' : ''}>✅ Listo</option>
+                <option value="entregado" ${p.estado === 'entregado' ? 'selected' : ''}>📦 Entregado</option>
               </select>
             </td>
             <td>
@@ -311,7 +232,37 @@
       });
     }
 
-    // Inicializar tabla al abrir
+    function cambiarEstadoPedido(id, nuevoEstado) {
+      let pedidos = JSON.parse(localStorage.getItem('pedidos_distingancia')) || [];
+      pedidos = pedidos.map(p => p.id === id ? { ...p, estado: nuevoEstado } : p);
+      localStorage.setItem('pedidos_distingancia', JSON.stringify(pedidos));
+      renderPedidos();
+    }
+
+    function eliminarPedido(id) {
+      let pedidos = JSON.parse(localStorage.getItem('pedidos_distingancia')) || [];
+      pedidos = pedidos.filter(p => p.id !== id);
+      localStorage.setItem('pedidos_distingancia', JSON.stringify(pedidos));
+      renderPedidos();
+    }
+
+    function limpiarTodo() {
+      if (confirm('¿Seguro que deseas borrar todo el conteo del día?')) {
+        localStorage.removeItem('pedidos_distingancia');
+        renderPedidos();
+      }
+    }
+
+    // Sincronización automática cada 2 segundos
+    setInterval(() => {
+      const dataActual = localStorage.getItem('pedidos_distingancia');
+      if (dataActual !== pedidosGuardadosAnterior) {
+        pedidosGuardadosAnterior = dataActual;
+        renderPedidos();
+      }
+    }, 2000);
+
+    // Carga inicial
     renderPedidos();
   </script>
 </body>
