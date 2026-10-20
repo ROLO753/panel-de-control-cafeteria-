@@ -87,44 +87,6 @@
       margin-bottom: 25px;
     }
 
-    /* Views control */
-    .view-section {
-      display: none;
-    }
-
-    .view-section.active {
-      display: block;
-    }
-
-    /* Metrics Cards */
-    .dashboard-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .card {
-      background-color: var(--bg-card);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .card h3 {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .card .number {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: var(--primary-color);
-    }
-
-    /* Forms and Tables */
     .card-box {
       background-color: var(--bg-card);
       padding: 20px;
@@ -140,7 +102,7 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 15px;
     }
@@ -205,21 +167,11 @@
     }
 
     .status.pendiente { background-color: #fef3c7; color: #d97706; }
+    .status.preparando { background-color: #e0f2fe; color: #0284c7; }
     .status.listo { background-color: #d1fae5; color: #059669; }
-    .status.disponible { background-color: #d1fae5; color: #059669; }
-    .status.agotado { background-color: #fee2e2; color: var(--danger-color); }
+    .status.entregado { background-color: #f3f4f6; color: #374151; }
 
-    .btn-action {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .btn-toggle { background-color: #e5e7eb; color: #374151; }
-    .btn-delete { background-color: #fee2e2; color: var(--danger-color); margin-left: 5px; }
+    .btn-delete { background-color: #fee2e2; color: var(--danger-color); border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -228,103 +180,58 @@
   <aside class="sidebar">
     <h2>La Distingancia ☕</h2>
     <ul class="nav-links">
-      <li><button class="active" onclick="switchTab('pedidos-tab', this)">📦 Pedidos Activos</button></li>
-      <li><button onclick="switchTab('menu-tab', this)">🍔 Gestionar Menú</button></li>
+      <li><button class="active">📦 Pedidos de WhatsApp</button></li>
     </ul>
   </aside>
 
   <!-- Main Content -->
   <main class="main-content">
     <div class="header">
-      <h1 id="view-title">Pedidos Activos</h1>
+      <h1>Panel de Pedidos (Vía WhatsApp)</h1>
       <span id="current-date"></span>
     </div>
 
-    <!-- SECCIÓN 1: PEDIDOS -->
-    <div id="pedidos-tab" class="view-section active">
-      <section class="dashboard-cards">
-        <div class="card">
-          <h3>Pedidos de Hoy</h3>
-          <div class="number">2</div>
-        </div>
-        <div class="card">
-          <h3>Ventas Estimadas</h3>
-          <div class="number">RD$ 400</div>
-        </div>
-        <div class="card">
-          <h3>En Preparación</h3>
-          <div class="number">1</div>
-        </div>
-      </section>
-
-      <section class="card-box">
-        <h2>Listado de Pedidos</h2>
-        <table>
-          <thead>
-            <tr>
-              <th># Pedido</th>
-              <th>Cliente</th>
-              <th>Detalle</th>
-              <th>Total</th>
-              <th>Estado</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody id="orders-table-body">
-            <!-- Cargado por JS -->
-          </tbody>
-        </table>
-      </section>
-    </div>
-
-    <!-- SECCIÓN 2: GESTIÓN DE MENÚ -->
-    <div id="menu-tab" class="view-section">
-      <!-- Formulario Agregar Producto -->
-      <section class="card-box">
-        <h2>Agregar Nuevo Producto</h2>
-        <form id="add-product-form" onsubmit="agregarProducto(event)">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Nombre del Producto</label>
-              <input type="text" id="prod-nombre" placeholder="Ej. Empanada de Queso" required>
-            </div>
-            <div class="form-group">
-              <label>Categoría</label>
-              <select id="prod-categoria">
-                <option value="Empanadas">Empanadas</option>
-                <option value="Jugos y Bebidas">Jugos y Bebidas</option>
-                <option value="Sandwiches">Sandwiches</option>
-                <option value="Combos">Combos</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Precio (RD$)</label>
-              <input type="number" id="prod-precio" placeholder="100" required>
-            </div>
+    <!-- Formulario rápido para registrar lo que llega a WhatsApp -->
+    <section class="card-box">
+      <h2>📲 Registrar Pedido Recibido en WhatsApp</h2>
+      <form id="whatsapp-order-form" onsubmit="registrarPedidoWhatsApp(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre del Cliente</label>
+            <input type="text" id="wa-cliente" placeholder="Ej. Juan Pérez" required>
           </div>
-          <button type="submit" class="btn-primary">+ Guardar Producto</button>
-        </form>
-      </section>
+          <div class="form-group">
+            <label>Detalle del Pedido</label>
+            <input type="text" id="wa-detalle" placeholder="Ej. 2x Empanadas, 1x Jugo" required>
+          </div>
+          <div class="form-group">
+            <label>Total (RD$)</label>
+            <input type="number" id="wa-total" placeholder="180" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">+ Añadir a Pedidos Activos</button>
+      </form>
+    </section>
 
-      <!-- Tabla Productos Existentes -->
-      <section class="card-box">
-        <h2>Productos en el Menú</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Categoría</th>
-              <th>Precio</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="menu-table-body">
-            <!-- Cargado por JS -->
-          </tbody>
-        </table>
-      </section>
-    </div>
+    <!-- Tabla de Pedidos -->
+    <section class="card-box">
+      <h2>Listado de Pedidos en Curso</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Cliente</th>
+            <th>Detalle</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body">
+          <!-- Cargado por JavaScript -->
+        </tbody>
+      </table>
+    </section>
   </main>
 
   <script>
@@ -333,116 +240,79 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Cambiar de Pestaña
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-      
-      document.getElementById('view-title').innerText = tabId === 'pedidos-tab' ? 'Pedidos Activos' : 'Gestión de Menú';
+    // Cargar pedidos guardados o iniciar con lista vacía
+    let pedidos = JSON.parse(localStorage.getItem('pedidos_distingancia')) || [];
+
+    function guardarYRenderizar() {
+      localStorage.setItem('pedidos_distingancia', JSON.stringify(pedidos));
+      renderPedidos();
     }
 
-    // Datos Base Iniciales
-    let pedidos = [
-      { id: '001', cliente: 'Juan Pérez', detalle: '2x Empanadas de Pollo, 1x Jugo', total: 'RD$ 180', estado: 'pendiente' },
-      { id: '002', cliente: 'María Gómez', detalle: '1x Sandwich Completo', total: 'RD$ 220', estado: 'listo' }
-    ];
-
-    let productos = [
-      { id: 1, nombre: 'Empanada de Pollo', categoria: 'Empanadas', precio: 60, disponible: true },
-      { id: 2, nombre: 'Jugo Natural de Chinola', categoria: 'Jugos y Bebidas', precio: 80, disponible: true },
-      { id: 3, nombre: 'Sandwich Completo', categoria: 'Sandwiches', precio: 220, disponible: false }
-    ];
-
-    // Cargar Tabla Pedidos
-    function renderPedidos() {
-      const tbody = document.getElementById('orders-table-body');
-      tbody.innerHTML = '';
-      pedidos.forEach(p => {
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>#${p.id}</strong></td>
-            <td>${p.cliente}</td>
-            <td>${p.detalle}</td>
-            <td>${p.total}</td>
-            <td><span class="status ${p.estado}">${p.estado.toUpperCase()}</span></td>
-            <td>
-              <select class="btn-status" onchange="cambiarEstadoPedido('${p.id}', this.value)">
-                <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                <option value="listo" ${p.estado === 'listo' ? 'selected' : ''}>Listo</option>
-                <option value="entregado" ${p.estado === 'entregado' ? 'selected' : ''}>Entregado</option>
-              </select>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    // Cargar Tabla Menú
-    function renderMenu() {
-      const tbody = document.getElementById('menu-table-body');
-      tbody.innerHTML = '';
-      productos.forEach(prod => {
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${prod.nombre}</strong></td>
-            <td>${prod.categoria}</td>
-            <td>RD$ ${prod.precio}</td>
-            <td>
-              <span class="status ${prod.disponible ? 'disponible' : 'agotado'}">
-                ${prod.disponible ? 'DISPONIBLE' : 'AGOTADO'}
-              </span>
-            </td>
-            <td>
-              <button class="btn-action btn-toggle" onclick="toggleEstadoProducto(${prod.id})">
-                ${prod.disponible ? 'Pausar' : 'Activar'}
-              </button>
-              <button class="btn-action btn-delete" onclick="eliminarProducto(${prod.id})">Eliminar</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    // Funciones del Menú
-    function agregarProducto(e) {
+    function registrarPedidoWhatsApp(e) {
       e.preventDefault();
-      const nombre = document.getElementById('prod-nombre').value;
-      const categoria = document.getElementById('prod-categoria').value;
-      const precio = parseFloat(document.getElementById('prod-precio').value);
+      const cliente = document.getElementById('wa-cliente').value;
+      const detalle = document.getElementById('wa-detalle').value;
+      const total = 'RD$ ' + document.getElementById('wa-total').value;
+      const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      productos.push({
+      const nuevoPedido = {
         id: Date.now(),
-        nombre,
-        categoria,
-        precio,
-        disponible: true
-      });
+        hora,
+        cliente,
+        detalle,
+        total,
+        estado: 'pendiente'
+      };
 
-      document.getElementById('add-product-form').reset();
-      renderMenu();
-    }
-
-    function toggleEstadoProducto(id) {
-      productos = productos.map(p => p.id === id ? { ...p, disponible: !p.disponible } : p);
-      renderMenu();
-    }
-
-    function eliminarProducto(id) {
-      productos = productos.filter(p => p.id !== id);
-      renderMenu();
+      pedidos.unshift(nuevoPedido); // Agregar al inicio
+      guardarYRenderizar();
+      document.getElementById('whatsapp-order-form').reset();
     }
 
     function cambiarEstadoPedido(id, nuevoEstado) {
       pedidos = pedidos.map(p => p.id === id ? { ...p, estado: nuevoEstado } : p);
-      renderPedidos();
+      guardarYRenderizar();
     }
 
-    // Inicializar
+    function eliminarPedido(id) {
+      pedidos = pedidos.filter(p => p.id !== id);
+      guardarYRenderizar();
+    }
+
+    function renderPedidos() {
+      const tbody = document.getElementById('orders-table-body');
+      tbody.innerHTML = '';
+
+      if (pedidos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #6b7280;">No hay pedidos activos registrados hoy.</td></tr>`;
+        return;
+      }
+
+      pedidos.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td><small>${p.hora}</small></td>
+            <td><strong>${p.cliente}</strong></td>
+            <td>${p.detalle}</td>
+            <td>${p.total}</td>
+            <td>
+              <select class="status ${p.estado}" onchange="cambiarEstadoPedido(${p.id}, this.value)">
+                <option value="pendiente" ${p.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                <option value="preparando" ${p.estado === 'preparando' ? 'selected' : ''}>Preparando</option>
+                <option value="listo" ${p.estado === 'listo' ? 'selected' : ''}>Listo</option>
+                <option value="entregado" ${p.estado === 'entregado' ? 'selected' : ''}>Entregado</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn-delete" onclick="eliminarPedido(${p.id})">Borrar</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Inicializar tabla al abrir
     renderPedidos();
-    renderMenu();
   </script>
 </body>
 </html>
