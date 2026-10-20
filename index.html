@@ -24,9 +24,8 @@
       min-height: 100vh;
     }
 
-    /* Sidebar */
     .sidebar {
-      width: 260px;
+      width: 250px;
       background-color: var(--bg-dark);
       color: white;
       padding: 20px;
@@ -41,15 +40,7 @@
       text-align: center;
     }
 
-    .nav-links {
-      list-style: none;
-    }
-
-    .nav-links li {
-      margin-bottom: 10px;
-    }
-
-    .nav-links button {
+    .sidebar button.nav-btn {
       width: 100%;
       background: none;
       border: none;
@@ -60,15 +51,15 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.95rem;
+      margin-bottom: 8px;
       transition: 0.3s;
     }
 
-    .nav-links button:hover, .nav-links button.active {
+    .sidebar button.nav-btn:hover, .sidebar button.nav-btn.active {
       background-color: var(--primary-color);
       color: white;
     }
 
-    /* Main Content */
     .main-content {
       flex: 1;
       padding: 30px;
@@ -82,8 +73,8 @@
       margin-bottom: 25px;
     }
 
-    .view-section { display: none; }
-    .view-section.active { display: block; }
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
 
     .dashboard-cards {
       display: grid;
@@ -117,14 +108,13 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     th, td {
@@ -145,10 +135,9 @@
       font-size: 0.85rem;
       font-weight: bold;
       border: 1px solid var(--border-color);
-      cursor: pointer;
     }
 
-    .badge-status {
+    .badge-agotado {
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 0.8rem;
@@ -156,9 +145,8 @@
       border: none;
       cursor: pointer;
     }
-
-    .badge-status.disponible { background-color: #d1fae5; color: #059669; }
-    .badge-status.agotado { background-color: #fee2e2; color: var(--danger-color); }
+    .badge-agotado.disponible { background-color: #d1fae5; color: #059669; }
+    .badge-agotado.agotado { background-color: #fee2e2; color: var(--danger-color); }
 
     .btn-delete {
       background-color: #fee2e2;
@@ -184,27 +172,25 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <h2>La Distingancia ☕</h2>
-    <ul class="nav-links">
-      <li><button class="active" onclick="switchTab('pedidos-tab', this)">📦 Pedidos de Clientes</button></li>
-      <li><button onclick="switchTab('menu-tab', this)">🍔 Control de Menú (Agotados)</button></li>
-    </ul>
+    <button class="nav-btn active" onclick="switchView('pedidos-view', this)">📦 Pedidos de Clientes</button>
+    <button class="nav-btn" onclick="switchView('menu-view', this)">🍔 Control de Menú (Agotados)</button>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
-    <div class="header">
-      <h1 id="view-title">Panel de Pedidos</h1>
-      <span id="current-date"></span>
-    </div>
+    
+    <!-- VISTA 1: PEDIDOS -->
+    <div id="pedidos-view" class="admin-section active">
+      <div class="header">
+        <h1>Control de Ventas y Pedidos</h1>
+        <span id="current-date"></span>
+      </div>
 
-    <!-- SECCIÓN 1: PEDIDOS -->
-    <div id="pedidos-tab" class="view-section active">
+      <!-- Indicadores -->
       <section class="dashboard-cards">
         <div class="card">
-          <h3>Pedidos Recibidos</h3>
+          <h3>Pedidos de Hoy</h3>
           <div class="number" id="count-pedidos">0</div>
         </div>
         <div class="card">
@@ -213,9 +199,12 @@
         </div>
       </section>
 
+      <!-- Tabla de Pedidos -->
       <section class="card-box">
-        <button class="btn-clear" onclick="limpiarTodo()">Borrar Historial</button>
-        <h2>Listado de Pedidos Activos</h2>
+        <div>
+          <button class="btn-clear" onclick="limpiarTodo()">Borrar Historial</button>
+          <h2>Pedidos Recibidos (Vía WhatsApp / Cliente)</h2>
+        </div>
         <table>
           <thead>
             <tr>
@@ -228,24 +217,27 @@
             </tr>
           </thead>
           <tbody id="orders-table-body">
-            <!-- Cargado por JS -->
+            <!-- Se actualiza solo -->
           </tbody>
         </table>
       </section>
     </div>
 
-    <!-- SECCIÓN 2: GESTIÓN DE MENÚ Y AGOTADOS -->
-    <div id="menu-tab" class="view-section">
+    <!-- VISTA 2: CONTROL DE MENÚ (AGOTADOS) -->
+    <div id="menu-view" class="admin-section">
+      <div class="header">
+        <h1>Gestión de Productos</h1>
+      </div>
       <section class="card-box">
-        <h2>Control de Disponibilidad (Agotar / Activar Productos)</h2>
-        <p style="font-size: 0.9rem; color: #6b7280; margin-bottom: 15px;">Los cambios que hagas aquí se reflejarán automáticamente en la pantalla de tus clientes.</p>
+        <h2>Marcar Productos como Agotados</h2>
+        <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 15px;">Los productos marcados como Agotados aparecerán bloqueados automáticamente en el menú de los clientes.</p>
         <table>
           <thead>
             <tr>
               <th>Producto</th>
               <th>Categoría</th>
               <th>Precio</th>
-              <th>Estado</th>
+              <th>Estado Actual</th>
             </tr>
           </thead>
           <tbody id="admin-menu-body">
@@ -254,6 +246,7 @@
         </table>
       </section>
     </div>
+
   </main>
 
   <script>
@@ -261,18 +254,14 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Cambiar de Pestaña
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
+    // Cambiar entre pestañas en el panel
+    function switchView(viewId, btn) {
+      document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sidebar button').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
       btn.classList.add('active');
-      
-      document.getElementById('view-title').innerText = tabId === 'pedidos-tab' ? 'Panel de Pedidos' : 'Control de Menú y Agotados';
     }
 
-    // --- LÓGICA DE PEDIDOS ---
     let pedidosGuardadosAnterior = "";
 
     function renderPedidos() {
@@ -287,8 +276,9 @@
       document.getElementById('sum-ventas').innerText = `RD$ ${totalSuma}`;
 
       tbody.innerHTML = '';
+
       if (pedidos.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #6b7280;">No hay pedidos registrados hoy.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #6b7280;">No hay pedidos registrados.</td></tr>`;
         return;
       }
 
@@ -336,8 +326,8 @@
       }
     }
 
-    // --- LÓGICA DE MENÚ Y AGOTADOS ---
-    const defaultMenu = [
+    // --- GESTIÓN DE PRODUCTOS AGOTADOS ---
+    const defaultAdminMenu = [
       { id: 1, name: 'Jamón y Queso', price: 125, category: 'sandwich', agotado: false },
       { id: 2, name: 'Salami y Queso', price: 150, category: 'sandwich', agotado: false },
       { id: 16, name: 'Salami Picadera', minPrice: 150, category: 'picaderas', agotado: false },
@@ -345,7 +335,7 @@
     ];
 
     function renderAdminMenu() {
-      let menu = JSON.parse(localStorage.getItem('menu_distingancia')) || defaultMenu;
+      let menu = JSON.parse(localStorage.getItem('menu_distingancia')) || defaultAdminMenu;
       const tbody = document.getElementById('admin-menu-body');
       tbody.innerHTML = '';
 
@@ -357,8 +347,8 @@
             <td>${p.category.toUpperCase()}</td>
             <td>${precioMostrado}</td>
             <td>
-              <button class="badge-status ${p.agotado ? 'agotado' : 'disponible'}" onclick="toggleAgotado(${index})">
-                ${p.agotado ? '🔴 AGOTADO' : '🟢 DISPONIBLE'}
+              <button class="badge-agotado ${p.agotado ? 'agotado' : 'disponible'}" onclick="toggleAgotado(${index})">
+                ${p.agotado ? '🔴 AGOTADO (Clic para activar)' : '🟢 DISPONIBLE (Clic para agotar)'}
               </button>
             </td>
           </tr>
@@ -367,15 +357,14 @@
     }
 
     function toggleAgotado(index) {
-      let menu = JSON.parse(localStorage.getItem('menu_distingancia')) || defaultMenu;
+      let menu = JSON.parse(localStorage.getItem('menu_distingancia')) || defaultAdminMenu;
       menu[index].agotado = !menu[index].agotado;
       localStorage.setItem('menu_distingancia', JSON.stringify(menu));
       renderAdminMenu();
     }
 
-    // Inicializar almacenamiento si no existe
     if (!localStorage.getItem('menu_distingancia')) {
-      localStorage.setItem('menu_distingancia', JSON.stringify(defaultMenu));
+      localStorage.setItem('menu_distingancia', JSON.stringify(defaultAdminMenu));
     }
 
     // Sincronización automática de pedidos cada 2 segundos
